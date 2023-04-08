@@ -27,11 +27,15 @@ public class MyGame extends Game {
 	Texture imgField;
 	Texture imgBita0, imgBita1;
 	Texture imgShayba;
+	Texture imgPause, imgPlay;
 
 	StaticBodyBox wallTop, wallDown;
 	StaticBodyBox wallLeftT, wallLeftD, wallRightT, wallRightD;
 	DynamicBodyBall shaiba;
 	KinematicBodyBall bita0, bita1;
+
+	boolean pause;
+	AeroButton btnPause;
 	
 	@Override
 	public void create () {
@@ -43,6 +47,8 @@ public class MyGame extends Game {
 		world = new World(new Vector2(0, 0), false);
 		debugRenderer = new Box2DDebugRenderer();
 		//img = new Texture("badlogic.jpg");
+		imgPause = new Texture("pause.png");
+		imgPlay = new Texture("play.png");
 		wallDown = new StaticBodyBox(world, WIDTH/2, 1, WIDTH, 0.5f);
 		wallTop = new StaticBodyBox(world, WIDTH/2, HEIGHT-1, WIDTH, 0.5f);
 		wallLeftT = new StaticBodyBox(world, 1, HEIGHT/2, 0.5f, HEIGHT);
@@ -51,39 +57,48 @@ public class MyGame extends Game {
 		shaiba = new DynamicBodyBall(world, WIDTH/2, HEIGHT/2, 0.5f);
 		bita0 = new KinematicBodyBall(world, WIDTH/4, HEIGHT/2, 0.5f);
 		bita1 = new KinematicBodyBall(world, WIDTH/4*3, HEIGHT/2, 0.5f);
+
+		btnPause = new AeroButton(0.1f, 0.1f, 0.5f, 0.5f);
 	}
 
 	@Override
 	public void render () {
-		for(int i=0; i<2; i++) {
-			if (Gdx.input.isTouched(i)) {
-				touch.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
-				camera.unproject(touch);
-				if (touch.x < WIDTH / 2) {
-					bita0.setOldXY();
-					bita0.body.setTransform(touch.x, touch.y, 0);
-					if (bita0.contact(shaiba)) {
-						shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
-					}
-				} else {
-					bita1.setOldXY();
-					bita1.body.setTransform(touch.x, touch.y, 0);
-					if (bita1.contact(shaiba)) {
-						shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
+		if (Gdx.input.justTouched()) {
+			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+			camera.unproject(touch);
+			if(btnPause.hit(touch.x, touch.y)) {
+				pause = !pause;
+			}
+		}
+		if(!pause) {
+			for (int i = 0; i < 2; i++) {
+				if (Gdx.input.isTouched(i)) {
+					touch.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
+					camera.unproject(touch);
+					if (touch.x < WIDTH / 2) {
+						bita0.setOldXY();
+						bita0.body.setTransform(touch.x, touch.y, 0);
+						if (bita0.contact(shaiba)) {
+							shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
+						}
+					} else {
+						bita1.setOldXY();
+						bita1.body.setTransform(touch.x, touch.y, 0);
+						if (bita1.contact(shaiba)) {
+							shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
+						}
 					}
 				}
 			}
 		}
-		world.step(1/60f, 6, 2);
+		if(!pause) world.step(1/60f, 6, 2);
 		ScreenUtils.clear(0, 0, 0, 1);
 		debugRenderer.render(world, camera.combined);
-		/*camera.update();
+		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
-		for(int i=0; i<100; i++)
-			batch.draw(img, ball.get(i).body.getPosition().x-0.3f,
-					ball.get(i).body.getPosition().y-0.3f, 0.3f*2, 0.3f*2);
-		batch.end();*/
+		batch.draw(pause?imgPlay:imgPause, btnPause.x, btnPause.y, btnPause.width, btnPause.height);
+		batch.end();
 	}
 	
 	@Override
