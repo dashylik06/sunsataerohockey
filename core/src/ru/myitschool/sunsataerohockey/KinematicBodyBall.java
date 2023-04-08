@@ -61,4 +61,9 @@ public class KinematicBodyBall {
     Vector2 getImpulse() {
         return new Vector2((getX()-oldX)*8, (getY()-oldY)*8);
     }
+
+    void setOldXY() {
+        oldX = getX();
+        oldY = getY();
+    }
 }

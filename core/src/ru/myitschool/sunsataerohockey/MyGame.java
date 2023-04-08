@@ -55,18 +55,23 @@ public class MyGame extends Game {
 
 	@Override
 	public void render () {
-
-		if(Gdx.input.isTouched()){
-			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touch);
-			{
-				bita0.oldX = bita0.getX();
-				bita0.oldY = bita0.getY();
-				bita0.body.setTransform(touch.x, touch.y, 0);
-				if(bita0.contact(shaiba)) {
-					shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
+		for(int i=0; i<2; i++) {
+			if (Gdx.input.isTouched(i)) {
+				touch.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
+				camera.unproject(touch);
+				if (touch.x < WIDTH / 2) {
+					bita0.setOldXY();
+					bita0.body.setTransform(touch.x, touch.y, 0);
+					if (bita0.contact(shaiba)) {
+						shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
+					}
+				} else {
+					bita1.setOldXY();
+					bita1.body.setTransform(touch.x, touch.y, 0);
+					if (bita1.contact(shaiba)) {
+						shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
+					}
 				}
-				System.out.println("contact: "+bita0.contact(shaiba));
 			}
 		}
 		world.step(1/60f, 6, 2);
