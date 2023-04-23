@@ -35,7 +35,7 @@ public class MyGame extends Game {
     DynamicBodyBall shaiba;
     KinematicBodyBall bita0, bita1;
 
-	long timeGoal, timeInterval = 3000;
+	long timeGoal, timeInterval = 2500;
 	boolean isGoal;
 
 	int goal0, goal1;
