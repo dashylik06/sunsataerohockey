@@ -14,6 +14,7 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.ArrayList;
 
@@ -34,6 +35,11 @@ public class MyGame extends Game {
     DynamicBodyBall shaiba;
     KinematicBodyBall bita0, bita1;
 
+	long timeGoal, timeInterval = 5000;
+	boolean isGoal;
+
+	int goal0, goal1;
+
     @Override
     public void create() {
         batch = new SpriteBatch();
@@ -47,7 +53,7 @@ public class MyGame extends Game {
         imgField = new Texture("field.png");
         imgBita0 = new Texture("BitaC.png");
         imgBita1 = new Texture("BitaG.png");
-        imgShayba = new Texture("BitaY.png");
+        imgShayba = new Texture("shaiba.png");
 
         wallTop = new StaticBodyBox(world, WIDTH / 2, HEIGHT, WIDTH, 0.4f);
 		wallDown = new StaticBodyBox(world, WIDTH / 2, 0, WIDTH, 0.4f);
@@ -59,8 +65,8 @@ public class MyGame extends Game {
         wallRightD = new StaticBodyBox(world, WIDTH, 0, 0.4f, HEIGHT/6*4);
 
         shaiba = new DynamicBodyBall(world, WIDTH / 2, HEIGHT / 2, 0.5f);
-        bita0 = new KinematicBodyBall(world, WIDTH / 4, HEIGHT / 2, 0.5f);
-        bita1 = new KinematicBodyBall(world, WIDTH / 4 * 3, HEIGHT / 2, 0.5f);
+        bita0 = new KinematicBodyBall(world, WIDTH / 8, HEIGHT / 2, 0.5f);
+        bita1 = new KinematicBodyBall(world, WIDTH / 8 * 7, HEIGHT / 2, 0.5f);
     }
 
     @Override
@@ -92,6 +98,27 @@ public class MyGame extends Game {
         }
 		// события
         world.step(1 / 60f, 6, 2);
+        if(isGoal) {
+            if (TimeUtils.millis() > timeGoal + timeInterval) {
+                isGoal = false;
+                shaiba.body.setTransform(WIDTH / 2, HEIGHT / 2, 0);
+                shaiba.body.setLinearVelocity(0,0);
+                bita0.body.setTransform(WIDTH / 8, HEIGHT / 2, 0);
+                bita1. body.setTransform(WIDTH / 8 * 7, HEIGHT / 2, 0);
+            }
+        }
+        else {
+            if (shaiba.getX() < 0) {
+                goal1 += 1;
+                isGoal = true;
+                timeGoal = TimeUtils.millis();
+            }
+            if (shaiba.getX() > WIDTH) {
+                goal0 += 1;
+                isGoal = true;
+                timeGoal = TimeUtils.millis();
+            }
+        }
 
 		// отрисовка
         //debugRenderer.render(world, camera.combined);
