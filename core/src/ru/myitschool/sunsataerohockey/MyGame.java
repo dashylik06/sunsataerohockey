@@ -49,10 +49,14 @@ public class MyGame extends Game {
 		//img = new Texture("badlogic.jpg");
 		imgPause = new Texture("pause.png");
 		imgPlay = new Texture("play.png");
-		wallDown = new StaticBodyBox(world, WIDTH/2, 1, WIDTH, 0.5f);
-		wallTop = new StaticBodyBox(world, WIDTH/2, HEIGHT-1, WIDTH, 0.5f);
-		wallLeftT = new StaticBodyBox(world, 1, HEIGHT/2, 0.5f, HEIGHT);
-		wallRightT = new StaticBodyBox(world, WIDTH-1, HEIGHT/2, 0.5f, HEIGHT);
+
+		wallDown = new StaticBodyBox(world, WIDTH/2, 0.5f, WIDTH, 0.5f);
+		wallTop = new StaticBodyBox(world, WIDTH/2, HEIGHT-0.5f, WIDTH, 0.5f);
+
+		wallLeftT = new StaticBodyBox(world, 0.4f, HEIGHT+1, 0.5f, HEIGHT);
+		wallLeftD = new StaticBodyBox(world, 0.4f, HEIGHT/5, 0.5f, HEIGHT-9.8f );
+		wallRightT = new StaticBodyBox(world, WIDTH-0.4f, HEIGHT+1, 0.5f, HEIGHT);
+		wallRightD = new StaticBodyBox(world,  WIDTH-0.4f, HEIGHT/5, 0.5f, HEIGHT-9.8f);
 
 		shaiba = new DynamicBodyBall(world, WIDTH/2, HEIGHT/2, 0.5f);
 		bita0 = new KinematicBodyBall(world, WIDTH/4, HEIGHT/2, 0.5f);
