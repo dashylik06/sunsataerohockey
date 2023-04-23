@@ -3,6 +3,7 @@ package ru.myitschool.sunsataerohockey;
 import android.os.Bundle;
 import android.view.View;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 import ru.myitschool.sunsataerohockey.MyGame;
@@ -21,5 +22,6 @@ public class AndroidLauncher extends AndroidApplication {
 		// View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 		// View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 		rootView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
+		Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
 	}
 }
