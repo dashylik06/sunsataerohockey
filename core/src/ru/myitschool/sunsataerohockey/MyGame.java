@@ -18,95 +18,95 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import java.util.ArrayList;
 
 public class MyGame extends Game {
-	public static final float WIDTH = 12.8f, HEIGHT = 7.2f;
-	SpriteBatch batch;
-	OrthographicCamera camera;
-	Vector3 touch;
-	World world;
-	Box2DDebugRenderer debugRenderer;
-	Texture imgField;
-	Texture imgBita0, imgBita1;
-	Texture imgShayba;
-	Texture imgPause, imgPlay;
+    public static final float WIDTH = 12.8f, HEIGHT = 7.2f;
+    SpriteBatch batch;
+    OrthographicCamera camera;
+    Vector3 touch;
+    World world;
+    Box2DDebugRenderer debugRenderer;
 
-	StaticBodyBox wallTop, wallDown;
-	StaticBodyBox wallLeftT, wallLeftD, wallRightT, wallRightD;
-	DynamicBodyBall shaiba;
-	KinematicBodyBall bita0, bita1;
+    Texture imgField;
+    Texture imgBita0, imgBita1;
+    Texture imgShayba;
 
-	boolean pause;
-	AeroButton btnPause;
-	
-	@Override
-	public void create () {
-		batch = new SpriteBatch();
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, WIDTH, HEIGHT);
-		touch = new Vector3();
-		Box2D.init();
-		world = new World(new Vector2(0, 0), false);
-		debugRenderer = new Box2DDebugRenderer();
-		//img = new Texture("badlogic.jpg");
-		imgPause = new Texture("pause.png");
-		imgPlay = new Texture("play.png");
+    StaticBodyBox wallTop, wallDown;
+    StaticBodyBox wallLeftT, wallLeftD, wallRightT, wallRightD;
+    DynamicBodyBall shaiba;
+    KinematicBodyBall bita0, bita1;
 
-		wallDown = new StaticBodyBox(world, WIDTH/2, 0.5f, WIDTH, 0.5f);
-		wallTop = new StaticBodyBox(world, WIDTH/2, HEIGHT-0.5f, WIDTH, 0.5f);
+    @Override
+    public void create() {
+        batch = new SpriteBatch();
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, WIDTH, HEIGHT);
+        touch = new Vector3();
+        Box2D.init();
+        world = new World(new Vector2(0, 0), false);
+        debugRenderer = new Box2DDebugRenderer();
 
-		wallLeftT = new StaticBodyBox(world, 0.4f, HEIGHT+1, 0.5f, HEIGHT);
-		wallLeftD = new StaticBodyBox(world, 0.4f, HEIGHT/5, 0.5f, HEIGHT-9.8f );
-		wallRightT = new StaticBodyBox(world, WIDTH-0.4f, HEIGHT+1, 0.5f, HEIGHT);
-		wallRightD = new StaticBodyBox(world,  WIDTH-0.4f, HEIGHT/5, 0.5f, HEIGHT-9.8f);
+        imgField = new Texture("field.png");
+        imgBita0 = new Texture("BitaC.png");
+        imgBita1 = new Texture("BitaG.png");
+        imgShayba = new Texture("BitaY.png");
 
-		shaiba = new DynamicBodyBall(world, WIDTH/2, HEIGHT/2, 0.5f);
-		bita0 = new KinematicBodyBall(world, WIDTH/4, HEIGHT/2, 0.5f);
-		bita1 = new KinematicBodyBall(world, WIDTH/4*3, HEIGHT/2, 0.5f);
+        wallTop = new StaticBodyBox(world, WIDTH / 2, HEIGHT, WIDTH, 0.4f);
+		wallDown = new StaticBodyBox(world, WIDTH / 2, 0, WIDTH, 0.4f);
 
-		btnPause = new AeroButton(0.1f, 0.1f, 0.5f, 0.5f);
-	}
+        wallLeftT = new StaticBodyBox(world, 0, HEIGHT, 0.4f, HEIGHT/6*4);
+        wallLeftD = new StaticBodyBox(world, 0, 0, 0.4f, HEIGHT/6*4);
 
-	@Override
-	public void render () {
-		if (Gdx.input.justTouched()) {
-			touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-			camera.unproject(touch);
-			if(btnPause.hit(touch.x, touch.y)) {
-				pause = !pause;
-			}
-		}
-		if(!pause) {
-			for (int i = 0; i < 2; i++) {
-				if (Gdx.input.isTouched(i)) {
-					touch.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
-					camera.unproject(touch);
-					if (touch.x < WIDTH / 2) {
-						bita0.setOldXY();
-						bita0.body.setTransform(touch.x, touch.y, 0);
-						if (bita0.contact(shaiba)) {
-							shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
-						}
-					} else {
-						bita1.setOldXY();
-						bita1.body.setTransform(touch.x, touch.y, 0);
-						if (bita1.contact(shaiba)) {
-							shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
-						}
-					}
-				}
-			}
-		}
-		if(!pause) world.step(1/60f, 6, 2);
-		ScreenUtils.clear(0, 0, 0, 1);
-		debugRenderer.render(world, camera.combined);
-		camera.update();
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
-		batch.draw(pause?imgPlay:imgPause, btnPause.x, btnPause.y, btnPause.width, btnPause.height);
-		batch.end();
-	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-	}
+        wallRightT = new StaticBodyBox(world, WIDTH, HEIGHT, 0.4f, HEIGHT/6*4);
+        wallRightD = new StaticBodyBox(world, WIDTH, 0, 0.4f, HEIGHT/6*4);
+
+        shaiba = new DynamicBodyBall(world, WIDTH / 2, HEIGHT / 2, 0.5f);
+        bita0 = new KinematicBodyBall(world, WIDTH / 4, HEIGHT / 2, 0.5f);
+        bita1 = new KinematicBodyBall(world, WIDTH / 4 * 3, HEIGHT / 2, 0.5f);
+    }
+
+    @Override
+    public void render() {
+		// касания
+        if (Gdx.input.justTouched()) {
+            touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            camera.unproject(touch);
+        }
+
+        for (int i = 0; i < 2; i++) {
+            if (Gdx.input.isTouched(i)) {
+                touch.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
+                camera.unproject(touch);
+                if (touch.x < WIDTH / 2) {
+                    bita0.setOldXY();
+                    bita0.body.setTransform(touch.x, touch.y, 0);
+                    if (bita0.contact(shaiba)) {
+                        shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
+                    }
+                } else {
+                    bita1.setOldXY();
+                    bita1.body.setTransform(touch.x, touch.y, 0);
+                    if (bita1.contact(shaiba)) {
+                        shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
+                    }
+                }
+            }
+        }
+		// события
+        world.step(1 / 60f, 6, 2);
+
+		// отрисовка
+        //debugRenderer.render(world, camera.combined);
+        camera.update();
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+		batch.draw(imgField, 0, 0, WIDTH, HEIGHT);
+		batch.draw(imgBita0, bita0.scrX(), bita0.scrY(), bita0.r*2, bita0.r*2);
+		batch.draw(imgBita1, bita1.scrX(), bita1.scrY(), bita1.r*2, bita1.r*2);
+		batch.draw(imgShayba, shaiba.scrX(), shaiba.scrY(), shaiba.r*2, shaiba.r*2);
+        batch.end();
+    }
+
+    @Override
+    public void dispose() {
+        batch.dispose();
+    }
 }
