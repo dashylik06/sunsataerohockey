@@ -2,9 +2,12 @@ package ru.myitschool.sunsataerohockey;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
@@ -25,6 +28,7 @@ public class MyGame extends Game {
     Vector3 touch;
     World world;
     Box2DDebugRenderer debugRenderer;
+    BitmapFont font, fontLarge;
 
     Texture imgField;
     Texture imgBita0, imgBita1;
@@ -34,6 +38,8 @@ public class MyGame extends Game {
     StaticBodyBox wallLeftT, wallLeftD, wallRightT, wallRightD;
     DynamicBodyBall shaiba;
     KinematicBodyBall bita0, bita1;
+
+    ScreenIntro screenIntro;
 
 	long timeGoal, timeInterval = 2500;
 	boolean isGoal;
@@ -119,6 +125,7 @@ public class MyGame extends Game {
                 timeGoal = TimeUtils.millis();
             }
         }
+        
 
 		// отрисовка
         //debugRenderer.render(world, camera.combined);
@@ -130,6 +137,21 @@ public class MyGame extends Game {
 		batch.draw(imgBita1, bita1.scrX(), bita1.scrY(), bita1.r*2, bita1.r*2);
 		batch.draw(imgShayba, shaiba.scrX(), shaiba.scrY(), shaiba.r*2, shaiba.r*2);
         batch.end();
+    }
+    public void createFont(){
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("text.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
+        parameter.size = 50;
+        parameter.color = Color.WHITE;
+        parameter.borderWidth = 2;
+        parameter.borderColor = Color.BLACK;
+        font = generator.generateFont(parameter);
+
+        parameter.size = 70;
+        fontLarge = generator.generateFont(parameter);
+
+        generator.dispose();
     }
 
     @Override
