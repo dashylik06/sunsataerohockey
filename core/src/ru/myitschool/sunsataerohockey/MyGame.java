@@ -24,120 +24,35 @@ import java.util.ArrayList;
 public class MyGame extends Game {
     public static final float WIDTH = 12.8f, HEIGHT = 7.2f;
     SpriteBatch batch;
-    OrthographicCamera camera;
+    OrthographicCamera camera, cameraFont;
     Vector3 touch;
-    World world;
-    Box2DDebugRenderer debugRenderer;
     BitmapFont font, fontLarge;
 
-    Texture imgField;
-    Texture imgBita0, imgBita1;
-    Texture imgShayba;
-
-    StaticBodyBox wallTop, wallDown;
-    StaticBodyBox wallLeftT, wallLeftD, wallRightT, wallRightD;
-    DynamicBodyBall shaiba;
-    KinematicBodyBall bita0, bita1;
-
     ScreenIntro screenIntro;
-
-	long timeGoal, timeInterval = 2500;
-	boolean isGoal;
-
-	int goal0, goal1;
+    ScreenSettings screenSettings;
+    ScreenAbout screenAbout;
+    ScreenGame screenGame;
 
     @Override
     public void create() {
         batch = new SpriteBatch();
         camera = new OrthographicCamera();
         camera.setToOrtho(false, WIDTH, HEIGHT);
+        cameraFont = new OrthographicCamera();
+        cameraFont.setToOrtho(false, WIDTH*100, HEIGHT*100);
         touch = new Vector3();
         Box2D.init();
-        world = new World(new Vector2(0, 0), false);
-        debugRenderer = new Box2DDebugRenderer();
 
-        imgField = new Texture("field.png");
-        imgBita0 = new Texture("BitaC.png");
-        imgBita1 = new Texture("BitaG.png");
-        imgShayba = new Texture("shaiba.png");
+        createFont();
 
-        wallTop = new StaticBodyBox(world, WIDTH / 2, HEIGHT, WIDTH, 0.4f);
-		wallDown = new StaticBodyBox(world, WIDTH / 2, 0, WIDTH, 0.4f);
+        screenIntro = new ScreenIntro(this);
+        screenSettings = new ScreenSettings(this);
+        screenAbout = new ScreenAbout(this);
+        screenGame = new ScreenGame(this);
+        setScreen(screenGame);
 
-        wallLeftT = new StaticBodyBox(world, 0, HEIGHT, 0.4f, HEIGHT/6*4);
-        wallLeftD = new StaticBodyBox(world, 0, 0, 0.4f, HEIGHT/6*4);
-
-        wallRightT = new StaticBodyBox(world, WIDTH, HEIGHT, 0.4f, HEIGHT/6*4);
-        wallRightD = new StaticBodyBox(world, WIDTH, 0, 0.4f, HEIGHT/6*4);
-
-        shaiba = new DynamicBodyBall(world, WIDTH / 2, HEIGHT / 2, 0.5f);
-        bita0 = new KinematicBodyBall(world, WIDTH / 8, HEIGHT / 2, 0.5f);
-        bita1 = new KinematicBodyBall(world, WIDTH / 8 * 7, HEIGHT / 2, 0.5f);
     }
 
-    @Override
-    public void render() {
-		// касания
-        if (Gdx.input.justTouched()) {
-            touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            camera.unproject(touch);
-        }
-
-        for (int i = 0; i < 2; i++) {
-            if (Gdx.input.isTouched(i)) {
-                touch.set(Gdx.input.getX(i), Gdx.input.getY(i), 0);
-                camera.unproject(touch);
-                if (touch.x < WIDTH / 2) {
-                    bita0.setOldXY();
-                    bita0.body.setTransform(touch.x, touch.y, 0);
-                    if (bita0.contact(shaiba)) {
-                        shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
-                    }
-                } else {
-                    bita1.setOldXY();
-                    bita1.body.setTransform(touch.x, touch.y, 0);
-                    if (bita1.contact(shaiba)) {
-                        shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
-                    }
-                }
-            }
-        }
-		// события
-        world.step(1 / 60f, 6, 2);
-        if(isGoal) {
-            if (TimeUtils.millis() > timeGoal + timeInterval) {
-                isGoal = false;
-                shaiba.body.setTransform(WIDTH / 2, HEIGHT / 2, 0);
-                shaiba.body.setLinearVelocity(0,0);
-                bita0.body.setTransform(WIDTH / 8, HEIGHT / 2, 0);
-                bita1. body.setTransform(WIDTH / 8 * 7, HEIGHT / 2, 0);
-            }
-        }
-        else {
-            if (shaiba.getX() < 0) {
-                goal1 += 1;
-                isGoal = true;
-                timeGoal = TimeUtils.millis();
-            }
-            if (shaiba.getX() > WIDTH) {
-                goal0 += 1;
-                isGoal = true;
-                timeGoal = TimeUtils.millis();
-            }
-        }
-        
-
-		// отрисовка
-        //debugRenderer.render(world, camera.combined);
-        camera.update();
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-		batch.draw(imgField, 0, 0, WIDTH, HEIGHT);
-		batch.draw(imgBita0, bita0.scrX(), bita0.scrY(), bita0.r*2, bita0.r*2);
-		batch.draw(imgBita1, bita1.scrX(), bita1.scrY(), bita1.r*2, bita1.r*2);
-		batch.draw(imgShayba, shaiba.scrX(), shaiba.scrY(), shaiba.r*2, shaiba.r*2);
-        batch.end();
-    }
     public void createFont(){
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("text.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
@@ -148,7 +63,7 @@ public class MyGame extends Game {
         parameter.borderColor = Color.BLACK;
         font = generator.generateFont(parameter);
 
-        parameter.size = 70;
+        parameter.size = 50;
         fontLarge = generator.generateFont(parameter);
 
         generator.dispose();
