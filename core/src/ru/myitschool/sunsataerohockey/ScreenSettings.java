@@ -7,11 +7,13 @@ public class ScreenSettings implements Screen {
     MyGame mg;
 
     Texture imgBackGround; // фон
-    AeroButton btnGame, btnSettings, btnAbout, btnExit;
+    AeroButton  btnExit, btnSound;
 
     public ScreenSettings(MyGame myGame) {
         mg = myGame;
-        //imgBackGround = new Texture("backgrounds/bg_intro.jpg");
+        imgBackGround = new Texture("hockey.jpg");
+        btnSound = new AeroButton(mg.font, "Sound on", 500, 500);
+        btnExit = new AeroButton(mg.font, "Back", 500, 200);
     }
 
     @Override
