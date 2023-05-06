@@ -32,6 +32,6 @@ public class AeroButton {
     }
 
     boolean hit(float tx, float ty){
-        return x < tx && tx < x+width && y < ty && ty < y+height;
+        return x/100 < tx && tx < x/100+width/100 && y/100 > ty && ty > y/100-height/100;
     }
 }

@@ -116,6 +116,7 @@ public class ScreenGame implements Screen {
 
         // отрисовка
         //debugRenderer.render(world, camera.combined);
+        // рисуем мир
         mg.camera.update();
         mg.batch.setProjectionMatrix(mg.camera.combined);
         mg.batch.begin();
@@ -124,6 +125,7 @@ public class ScreenGame implements Screen {
         mg.batch.draw(imgBita1, bita1.scrX(), bita1.scrY(), bita1.r*2, bita1.r*2);
         mg.batch.draw(imgShayba, shaiba.scrX(), shaiba.scrY(), shaiba.r*2, shaiba.r*2);
         mg.batch.end();
+        // рисуем тексты
         mg.cameraFont.update();
         mg.batch.setProjectionMatrix(mg.cameraFont.combined);
         mg.batch.begin();

@@ -49,7 +49,7 @@ public class MyGame extends Game {
         screenSettings = new ScreenSettings(this);
         screenAbout = new ScreenAbout(this);
         screenGame = new ScreenGame(this);
-        setScreen(screenGame);
+        setScreen(screenIntro);
 
     }
 
@@ -57,7 +57,7 @@ public class MyGame extends Game {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("text.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
-        parameter.size = 50;
+        parameter.size = 30;
         parameter.color = Color.WHITE;
         parameter.borderWidth = 2;
         parameter.borderColor = Color.BLACK;
@@ -72,5 +72,13 @@ public class MyGame extends Game {
     @Override
     public void dispose() {
         batch.dispose();
+    }
+
+    void sleep(){
+        try {
+            Thread.sleep(500);
+        } catch (Exception e){
+
+        }
     }
 }
