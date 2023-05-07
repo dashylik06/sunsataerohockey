@@ -13,7 +13,7 @@ public class ScreenAbout implements Screen {
     Texture imgBackGround; // фон
     AeroButton  btnExit;
     String textAbout = "Игра sunsataerohockey создана\n "+
-            " в itschool samsung.\n"+
+            "в itschool samsung.\n"+
             "Цель игры: забить шайбу в ворота противника";
 
     public ScreenAbout(MyGame myGame) {
@@ -32,7 +32,6 @@ public class ScreenAbout implements Screen {
         if(Gdx.input.justTouched()) {
             mg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             mg.camera.unproject(mg.touch);
-
             if(btnExit.hit(mg.touch.x, mg.touch.y)){
                 mg.setScreen(mg.screenIntro);
             }
@@ -45,6 +44,7 @@ public class ScreenAbout implements Screen {
         mg.font.draw(mg.batch, textAbout, 400, 650);
         btnExit.font.draw(mg.batch, btnExit.text, btnExit.x, btnExit.y);
         mg.batch.end();
+
 
     }
 
@@ -70,6 +70,7 @@ public class ScreenAbout implements Screen {
 
     @Override
     public void dispose() {
-
+        imgBackGround.dispose();
+        }
     }
-}
+

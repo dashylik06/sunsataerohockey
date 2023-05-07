@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.TimeUtils;
 
 public class ScreenGame implements Screen {
+    public boolean musicOn;
     MyGame mg;
     World world;
     Box2DDebugRenderer debugRenderer;
