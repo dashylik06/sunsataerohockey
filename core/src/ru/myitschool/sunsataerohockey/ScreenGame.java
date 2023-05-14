@@ -4,7 +4,9 @@ import static ru.myitschool.sunsataerohockey.MyGame.HEIGHT;
 import static ru.myitschool.sunsataerohockey.MyGame.WIDTH;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -18,16 +20,18 @@ public class ScreenGame implements Screen {
     World world;
     Box2DDebugRenderer debugRenderer;
 
-    AeroButton btnExit;
-
     Texture imgField;
     Texture imgBita0, imgBita1;
     Texture imgShayba;
+
+    Sound sndShaiba, sndWin;
 
     StaticBodyBox wallTop, wallDown;
     StaticBodyBox wallLeftT, wallLeftD, wallRightT, wallRightD;
     DynamicBodyBall shaiba;
     KinematicBodyBall bita0, bita1;
+
+
 
     long timeGoal, timeInterval = 2500;
     boolean isGoal;
@@ -43,6 +47,8 @@ public class ScreenGame implements Screen {
         imgBita0 = new Texture("BitaC.png");
         imgBita1 = new Texture("BitaG.png");
         imgShayba = new Texture("shaiba.png");
+        sndShaiba = Gdx.audio.newSound(Gdx.files.internal("audio.mp3"));
+        sndWin = Gdx.audio.newSound(Gdx.files.internal("win.mp3"));
 
         wallTop = new StaticBodyBox(world, WIDTH / 2, HEIGHT, WIDTH, 0.4f);
         wallDown = new StaticBodyBox(world, WIDTH / 2, 0, WIDTH, 0.4f);
@@ -60,7 +66,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void show() {
-
+        Gdx.input.setCatchKey(Input.Keys.BACK, true);
     }
 
     @Override
@@ -68,8 +74,10 @@ public class ScreenGame implements Screen {
 // касания
         if (Gdx.input.justTouched()) {
             mg.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            mg.camera.unproject(mg.touch);
-        }
+            mg.camera.unproject(mg.touch);}
+        if(Gdx.input.isKeyPressed(Input.Keys.BACK)) {
+                mg.setScreen(mg.screenIntro);}
+
 
         for (int i = 0; i < 2; i++) {
             if (Gdx.input.isTouched(i)) {
@@ -80,12 +88,14 @@ public class ScreenGame implements Screen {
                     bita0.body.setTransform(mg.touch.x, mg.touch.y, 0);
                     if (bita0.contact(shaiba)) {
                         shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
+                        if(mg.soundOn) sndShaiba.play();
                     }
                 } else {
                     bita1.setOldXY();
                     bita1.body.setTransform(mg.touch.x, mg.touch.y, 0);
                     if (bita1.contact(shaiba)) {
                         shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
+                        if(mg.soundOn) sndShaiba.play();
                     }
                 }
             }
@@ -106,11 +116,14 @@ public class ScreenGame implements Screen {
                 goal1 += 1;
                 isGoal = true;
                 timeGoal = TimeUtils.millis();
+                if(mg.soundOn) sndWin.play();
+
             }
             if (shaiba.getX() > WIDTH) {
                 goal0 += 1;
                 isGoal = true;
                 timeGoal = TimeUtils.millis();
+                if(mg.soundOn) sndWin.play();
             }
         }
 
@@ -134,6 +147,7 @@ public class ScreenGame implements Screen {
         mg.fontLarge.draw(mg.batch, ":", 0, HEIGHT*100-25, WIDTH*100, Align.center, true);
         mg.fontLarge.draw(mg.batch, ""+goal1, WIDTH/2*100+20, HEIGHT*100-30, WIDTH/2*100-20, Align.left, true);
         mg.batch.end();
+
     }
 
     @Override
@@ -153,7 +167,7 @@ public class ScreenGame implements Screen {
 
     @Override
     public void hide() {
-
+        Gdx.input.setCatchKey(Input.Keys.BACK, false);
     }
 
     @Override
