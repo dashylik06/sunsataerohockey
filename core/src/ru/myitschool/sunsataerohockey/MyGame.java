@@ -32,6 +32,7 @@ public class MyGame extends Game {
     ScreenSettings screenSettings;
     ScreenAbout screenAbout;
     ScreenGame screenGame;
+    boolean soundOn = true;
 
     @Override
     public void create() {
@@ -57,7 +58,7 @@ public class MyGame extends Game {
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("text.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.characters = "абвгдеёжзийклмнопрстуфхцчшщъыьэюяabcdefghijklmnopqrstuvwxyzАБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789][_!$%#@|\\/?-+=()*&.;:,{}\"´`'<>";
-        parameter.size = 30;
+        parameter.size = 50;
         parameter.color = Color.WHITE;
         parameter.borderWidth = 2;
         parameter.borderColor = Color.BLACK;

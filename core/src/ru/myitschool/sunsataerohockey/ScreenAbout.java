@@ -12,9 +12,10 @@ public class ScreenAbout implements Screen {
 
     Texture imgBackGround; // фон
     AeroButton  btnExit;
-    String textAbout = "Игра sunsataerohockey создана\n "+
+    String textAbout = "Игра sunsataerohockey создана\n"+
             "в itschool samsung.\n"+
-            "Цель игры: забить шайбу в ворота противника";
+            "Цель игры: забить шайбу в ворота \n"+
+            "противника";
 
     public ScreenAbout(MyGame myGame) {
         mg = myGame;
@@ -37,14 +38,21 @@ public class ScreenAbout implements Screen {
             }
         }
 
+        // отрисовка
+        //debugRenderer.render(world, camera.combined);
+        // рисуем мир
         mg.camera.update();
         mg.batch.setProjectionMatrix(mg.camera.combined);
         mg.batch.begin();
         mg.batch.draw(imgBackGround, 0, 0, WIDTH, HEIGHT);
-        mg.font.draw(mg.batch, textAbout, 400, 650);
+        mg.batch.end();
+        // рисуем тексты
+        mg.cameraFont.update();
+        mg.batch.setProjectionMatrix(mg.cameraFont.combined);
+        mg.batch.begin();
+        mg.font.draw(mg.batch, textAbout, 50, 470);
         btnExit.font.draw(mg.batch, btnExit.text, btnExit.x, btnExit.y);
         mg.batch.end();
-
 
     }
 
