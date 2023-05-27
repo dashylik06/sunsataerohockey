@@ -32,7 +32,7 @@ public class ScreenGame implements Screen {
     KinematicBodyBall bita0, bita1;
 
 
-
+    long timeSoundPlay, timeSoundInterval = 100;
     long timeGoal, timeInterval = 2500;
     boolean isGoal;
 
@@ -88,14 +88,20 @@ public class ScreenGame implements Screen {
                     bita0.body.setTransform(mg.touch.x, mg.touch.y, 0);
                     if (bita0.contact(shaiba)) {
                         shaiba.body.applyLinearImpulse(bita0.getImpulse(), shaiba.body.getPosition(), true);
-                        if(mg.soundOn) sndShaiba.play();
+                        if(timeSoundPlay+timeSoundInterval < TimeUtils.millis()) {
+                            timeSoundPlay = TimeUtils.millis();
+                            if (mg.soundOn) sndShaiba.play();
+                        }
                     }
                 } else {
                     bita1.setOldXY();
                     bita1.body.setTransform(mg.touch.x, mg.touch.y, 0);
                     if (bita1.contact(shaiba)) {
                         shaiba.body.applyLinearImpulse(bita1.getImpulse(), shaiba.body.getPosition(), true);
-                        if(mg.soundOn) sndShaiba.play();
+                        if(timeSoundPlay+timeSoundInterval < TimeUtils.millis()) {
+                            timeSoundPlay = TimeUtils.millis();
+                            if (mg.soundOn) sndShaiba.play();
+                        }
                     }
                 }
             }
